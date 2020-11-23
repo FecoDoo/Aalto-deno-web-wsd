@@ -11,4 +11,21 @@ const log = async ({ request }, next) => {
   await next();
 };
 
-export { errorMiddleware, log };
+const checkCount = async ({ session }, next) => {
+  let count = await session.get("count");
+
+  if (!count) {
+    count = 1;
+    await session.set("count", count);
+  } else {
+    if (count > 2) {
+      render("over-used.ejs");
+    } else {
+      await session.set("count", count + 1);
+    }
+  }
+
+  await next();
+};
+
+export { errorMiddleware, log, checkCount };
