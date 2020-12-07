@@ -12,23 +12,19 @@ import * as bcrypt from "https://deno.land/x/bcrypt@v0.2.4/mod.ts";
 const app = new Application();
 const router = new Router();
 
-const session = new Session({ framework: "oak" });
-await session.init();
-app.use(session.use()(session));
-
 const ejsEngine = engineFactory.getEjsEngine();
 const oakAdapter = adapterFactory.getOakAdapter();
 app.use(viewEngine(oakAdapter, ejsEngine));
 
-// const client = new Client({
-//   hostname: "localhost",
-//   database: "wsd",
-//   user: "postgres",
-//   password: "postgres",
-//   port: 5432,
-// });
+// const client = new Client({});
 
-const client = new Client({});
+const client = new Client({
+  hostname: "localhost",
+  database: "wsd",
+  user: "postgres",
+  password: "postgres",
+  port: 5432,
+});
 
 const executeQuery = async (query, ...args) => {
   try {

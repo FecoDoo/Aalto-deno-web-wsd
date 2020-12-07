@@ -1,0 +1,1 @@
+psql postgres://postgres:postgres@localhost:5432/wsd -c "TRUNCATE TABLE stored_files"
