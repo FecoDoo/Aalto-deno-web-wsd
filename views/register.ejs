@@ -1,6 +1,6 @@
 <%- include('./partials/header.ejs') %>
 <h1>Register Form</h1>
-<form action="/auth/registration" method="POST">
+<form id="form">
     <div class="form-group">
       <label for="email">Email address as user name</label>
       <input type="email" class="form-control" name="email" aria-describedby="emailHelp" placeholder="Enter email as user name">
@@ -15,29 +15,39 @@
         <input type="password" class="form-control" name="verification" placeholder="Password verification">
     </div>
 
-    <button type="submit" class="btn btn-primary">Register</button>
+    <button type="button" id="submit" class="btn btn-primary">Register</button>
     <button type="button" onclick="javascrtpt:window.location.href='/auth/login'" class="btn btn-danger">Login</button>
   </form>
-
-  <% if (error) { %> 
-    <div class="container">
-    <%- include('partials/validation', {
-        error: error, 
-    }); %>
-    </div>
-<% }; %>
-  <!-- <script type="application/javascript">
-    function submit(){
-      console.log($('form').serializeObject())
-      $.ajax({
-          url:"/auth/registration",
-          type:"POST",
-          data:JSON.stringify($('form').serializeObject()),
-          contentType:"application/json",  //缺失会出现URL编码，无法转成json对象
-          success:function(){
-            alert("成功");
-          }
-      });
-    };
-  </script> -->
+  <%- include('partials/error') %>
+  <script>
+    $(document)
+        .ready(function () {
+            
+            $('#submit').click(function () {
+                var formData = $("#form").serializeArray()
+                console.log(formData[0].value);
+                var data = {
+                    email: formData[0].value,
+                    password: formData[1].value,
+                    verification: formData[2].value
+                }
+                $.ajax({
+                    type: 'POST',
+                    url: '/auth/registration',
+                    cache: false,
+                    data: JSON.stringify(data),
+                    dataType: "json",
+                    complete: function (response, XMLHttpRequest) {
+                        console.log(response)
+                        if (response.status !== 200){
+                            document.getElementById("error").innerHTML = response.responseText
+                        } else {
+                            window.location.href = "/dashboard"
+                        }
+                    }
+                })
+            }
+            )
+        })
+</script>
 <%- include('./partials/footer.ejs') %>

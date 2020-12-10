@@ -1,93 +1,110 @@
 import { executeQuery } from "../../database/database.js";
 import { bcrypt } from "../../deps.js";
 import * as commonService from "../../services/commonService.js";
+import {
+  validate,
+  required,
+  isEmail,
+  lengthBetween,
+  maxLength,
+  minLength,
+} from "../../deps.js";
 
-const postLoginForm = async ({ request, response, session, render }) => {
-  let error = "Invalid email or password";
-  const body = request.body();
-  if (body.type == "undefined") {
-    response.redirect("/auth/login");
-    return;
-  }
-
-  const params = await body.value;
-
-  if (params.has("email") && params.has("password")) {
-    const email = params.get("email");
-    const password = params.get("password");
-    if (await commonService.check(email, password)) {
-      // check if the email exists in the database
-      const user = await commonService.get_user_by_email(email);
-
-      if (user.rowCount === 0) {
-        response.status = 401;
-        error = "User not found";
-      } else {
-        // take the first row from the results
-        const userObj = user.rowsOfObjects()[0];
-
-        const hash = userObj.password;
-
-        const passwordCorrect = await bcrypt.compare(password, hash);
-
-        if (!passwordCorrect) {
-          response.status = 401;
-          error = "Password incorrect";
-        } else {
-          await session.set("authenticated", true);
-          await session.set("user", {
-            id: userObj.id,
-            email: userObj.email,
-          });
-          response.status = 200;
-          response.body = "Authentication successful!";
-          response.redirect("/dashboard");
-          return;
-        }
-      }
-    }
-  }
-
-  render("login.ejs", { error: error });
+const loginRules = {
+  email: [required, maxLength(320), isEmail],
+  password: [required, lengthBetween(4, 60)],
 };
 
-const postRegistrationForm = async ({ request, response,render }) => {
-  let error = "Invalid email or password";
-  const body = request.body();
-  if (body.type == "undefined") {
-    render("register.ejs", {error:error})
-    return;
-  }
-
-  const params = await body.value;
-
-  if (
-    params.has("email") &&
-    params.has("password") &&
-    params.has("verification")
-  ) {
-    const email = params.get("email");
-    const password = params.get("password");
-    const verification = params.get("verification");
-    if (
-      password == verification &&
-      (await commonService.check(email, password))
-    ) {
-      const hash = await bcrypt.hash(password);
-      await executeQuery(
-        "INSERT INTO users (email, password) VALUES ($1, $2);",
-        email,
-        hash
-      );
-      response.status = 200;
-      response.body = "Success";
-      response.redirect("/dashboard");
-    } else {
-      response.status = 400;
-      error = "Form invalid";
-    }
-  }
-  render("register.ejs", { error: error });
+const registerationRules = {
+  email: [required, maxLength(320), isEmail],
+  password: [required, lengthBetween(4, 60)],
+  verification: [required, lengthBetween(4, 60)],
+};
+const postTestForm = async ({ request, response }) => {
+  console.log("test");
+  const body = request.body({ type: "json" });
+  console.log(body);
+  const document = await body.value;
+  console.log(document);
+  response.status = 200;
 };
 
-export { postLoginForm, postRegistrationForm };
+const postLoginForm = async ({ request, response, session }) => {
+  const body = request.body({ type: "json" });
+  const document = await body.value;
+
+  const [passes, errors] = await validate(document, loginRules);
+
+  if (passes) {
+    const email = document["email"];
+    const password = document["password"];
+    const user = await commonService.get_user_by_email(email);
+
+    if (user.rowCount === 0) {
+      response.status = 401;
+      response.body = "User not found";
+      return;
+    }
+
+    const userObj = user.rowsOfObjects()[0];
+    const hashed_password = userObj.password;
+    const compare_password = await bcrypt.compare(password, hashed_password);
+    if (!compare_password) {
+      response.status = 401;
+      response.body = "Password incorrect";
+      return;
+    }
+
+    await session.set("authenticated", true);
+    await session.set("user", {
+      id: userObj.id,
+      email: userObj.email,
+    });
+    response.status = 200;
+    return;
+  } else {
+    response.status = 400;
+    response.body = "Invalid email or password";
+    return;
+  }
+};
+
+const postRegistrationForm = async ({ request, response }) => {
+  const body = request.body({ type: "json" });
+  const document = await body.value;
+
+  const [passes, errors] = await validate(document, registerationRules);
+  if (passes) {
+    const email = document["email"];
+    const password = document["password"];
+    const verification = document["verification"];
+
+    if (verification !== password) {
+      response.status = 401;
+      response.body = "verification and password does not mathch";
+      return;
+    }
+
+    const user = await commonService.get_user_by_email(email);
+
+    if (user.rowCount !== 0) {
+      response.status = 300;
+      response.body = "User already exists";
+      return;
+    }
+    const hash = await bcrypt.hash(password);
+    await executeQuery(
+      "INSERT INTO users (email, password) VALUES ($1, $2);",
+      email,
+      hash
+    );
+    response.status = 200;
+    return;
+  } else {
+    response.status = 400;
+    response.body = "Invalid email or password";
+    return;
+  }
+};
+
+export { postLoginForm, postRegistrationForm, postTestForm };

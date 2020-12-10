@@ -6,12 +6,15 @@ import * as renderController from "./controllers/renderController.js";
 const router = new Router();
 
 router.get("/", renderController.renderMainPage);
+router.get("/dashboard", renderController.renderDashboardPage);
+
 router.get("/auth/login", renderController.renderLoginPage);
 router.get("/auth/registration", renderController.renderRegisterationPage);
-router.get("/dashboard", renderController.renderDashboardPage);
+router.get("/auth/test", renderController.renderTestPage);
 
 router.post("/auth/login", authController.postLoginForm);
 router.post("/auth/registration", authController.postRegistrationForm);
+router.post("/auth/test", authController.postTestForm);
 
 // router.get("/news/:id", newsController.renderNewsById);
 
