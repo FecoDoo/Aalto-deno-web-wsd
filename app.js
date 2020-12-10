@@ -23,8 +23,9 @@ app.use(
 
 app.use(session.use()(session));
 app.use(middleware.errorMiddleware);
-app.use(middleware.log);
-app.use(middleware.checkCount);
+app.use(middleware.checkLoginStatus);
+// app.use(middleware.log);
+// app.use(middleware.checkCount);
 app.use(router.routes());
 
 if (!Deno.env.get("TEST_ENVIRONMENT")) {

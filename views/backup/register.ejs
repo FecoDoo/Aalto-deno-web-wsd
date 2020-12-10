@@ -1,0 +1,35 @@
+<%- include('./partials/header.ejs') %>
+<h1>Register Form</h1>
+<form action="/auth/registration" method="POST">
+    <div class="form-group">
+      <label for="email">Email address as user name</label>
+      <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email as user name">
+      <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" class="form-control" id="password" placeholder="Password">
+    </div>
+    <div class="form-group">
+        <label for="password">Password verification</label>
+        <input type="password" class="form-control" id="verification" placeholder="Password verification">
+    </div>
+
+    <button type="submit" class="btn btn-primary" onclick="submit();">Register</button>
+    <button type="button" onclick="javascrtpt:window.location.href='/auth/login'" class="btn btn-danger">Login</button>
+  </form>
+  <script type="application/javascript">
+    function submit(){
+      console.log($('form').serializeObject())
+      $.ajax({
+          url:"/auth/registration",
+          type:"POST",
+          data:JSON.stringify($('form').serializeObject()),
+          contentType:"application/json",  //缺失会出现URL编码，无法转成json对象
+          success:function(){
+            alert("成功");
+          }
+      });
+    };
+  </script>
+<%- include('./partials/footer.ejs') %>

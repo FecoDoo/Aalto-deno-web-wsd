@@ -1,0 +1,33 @@
+<%- include('./partials/header.ejs') %>
+<div class="container">
+    <h1>Login Form</h1>
+    <form action="/auth/login" method="POST">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" aria-describedby="emailHelp"
+                placeholder="Enter email as user name">
+            <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
+                else.</small> -->
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" placeholder="Password">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Login</button>
+            <button type="button" onclick="javascrtpt:window.location.href='/auth/registration'"
+                class="btn btn-danger">Register</button>
+        </div>
+    </form>
+
+    <%- include('partials/validation', {
+        error: error,
+    }); %>
+    <!-- <script>
+        function loginfo() {
+            var data = $("#loginform").serialize();
+            console.log(data);
+        }
+
+    </script> -->
+    <%- include('./partials/footer.ejs') %>
