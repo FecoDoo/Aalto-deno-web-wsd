@@ -1,14 +1,57 @@
 <%- include('./partials/header.ejs') %>
-<h1>This page has forms!</h1>
-<p>Welcome to my awesome forms page!</p>
-<a href="/">Click here to see another awesome page!</a>
-<form>
-    <fieldset>
-        <label for='name'>Name: </label>
-        <input type='text' name='name' />
-        <label for='address'>Address: </label>
-        <input type='text' name='address' />
-        <input type='submit' />
-    </fieldset>
-</form>
+
+<h1>This is the index page</h1>
+<p>Welcome to the self-monitoring application</p>
+<p>This application provides both reporting and summary functions for monitoring user status of the day</p>
+
+
+    <%- include('./partials/auth.ejs') %>
+
+
+<div class="alert alert-primary" role="alert">
+    <h2>Average mood of users yestoday <span class="badge badge-secondary" id="yestoday"></span></h2>
+</div>
+<div class="alert alert-secondary" role="alert">
+    <h2>Average mood of users today <span class="badge badge-secondary" id="today"></span></h2>
+</div>
+
+<div class="alert alert-danger" role="alert">
+    <h2>Trend <span class="badge badge-secondary" id="trend"></span></h2>
+</div>
+
+<script>
+    $(document)
+        .ready(function () {
+            $.ajax({
+                type: 'POST',
+                url: '/api/trend',
+                complete: function (response) {
+                    if (response.status == 200) {
+                        var body = JSON.parse(response.responseText);
+
+                        document.getElementById("yestoday").innerHTML = body[0].mood;
+                        document.getElementById("today").innerHTML = body[1].mood;
+
+                        if (Number(body[0].mood) < Number(body[1].mood)){
+                            document.getElementById("trend").innerHTML = "things are looking bright today"
+                        } else {
+                            document.getElementById("trend").innerHTML = "things are looking gloomy today"
+                        }
+                    } else {
+                        document.getElementById("yestoday").innerHTML = "No data for yestoday";
+                        document.getElementById("today").innerHTML = "No data for today";
+                    }
+                    // var data = JSON.parse(response.responseText)
+                    // document.getElementById("morning_report_status").innerHTML = data.morning
+                    // document.getElementById("evening_report_status").innerHTML = data.evening
+                }
+            });
+            // $('#morning_button').click(function () {
+            //     window.location.href = "/behavior/reporting/morning";
+            // }),
+            // $('#evening_button').click(function () {
+            //     window.location.href = "/behavior/reporting/evening";
+            // })
+        });
+</script>
 <%- include('./partials/footer.ejs') %>

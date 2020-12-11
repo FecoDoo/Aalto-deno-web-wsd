@@ -20,6 +20,7 @@ const registerationRules = {
   password: [required, lengthBetween(4, 60)],
   verification: [required, lengthBetween(4, 60)],
 };
+
 const postTestForm = async ({ request, response }) => {
   console.log("test");
   const body = request.body({ type: "json" });
@@ -80,7 +81,7 @@ const postRegistrationForm = async ({ request, response }) => {
     const verification = document["verification"];
 
     if (verification !== password) {
-      response.status = 401;
+      response.status = 400;
       response.body = "verification and password does not mathch";
       return;
     }
@@ -107,4 +108,10 @@ const postRegistrationForm = async ({ request, response }) => {
   }
 };
 
-export { postLoginForm, postRegistrationForm, postTestForm };
+const logout = async ({ response, session }) => {
+  await session.set("authenticated", false);
+  response.status = 200;
+  response.body = "Successfully logout";
+};
+
+export { postLoginForm, postRegistrationForm, postTestForm, logout };

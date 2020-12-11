@@ -1,0 +1,49 @@
+<%- include('../partials/header.ejs') %>
+<%- include('../partials/navbar.ejs') %>
+<h1>Report Status for today</h1>
+<br>
+<ul>
+    <li>
+        <div class="alert alert-primary" role="alert">
+           
+          
+        <h3>Morning Report <span class="badge badge-secondary" id="morning_report_status"></span></h3>
+
+        <button type="button" id="morning_button" class="btn btn-primary">Go to morning report</button>
+    </div>
+    </li>
+    <br>
+    <li>
+        <div class="alert alert-secondary" role="alert">
+        <h3>Evening Report <span class="badge badge-secondary" id="evening_report_status"></span></h3>
+
+        <button type="button" id="evening_button" class="btn btn-danger">Go to evening report</button>
+    </div>
+    </li>
+</ul>
+
+
+<script>
+    $(document)
+        .ready(function () {
+            var day = new Date();
+            day.getMonth()
+            $.ajax({
+                    type: 'POST',
+                    url: '/behavior/reporting',
+                    complete: function (response) {
+                        var data = JSON.parse(response.responseText)
+                        document.getElementById("morning_report_status").innerHTML = data.morning
+                        document.getElementById("evening_report_status").innerHTML = data.evening
+                    }
+                }),
+            $('#morning_button').click(function () {
+                window.location.href = "/behavior/reporting/morning";
+            }),
+            $('#evening_button').click(function () {
+                window.location.href = "/behavior/reporting/evening";
+            })
+        });
+</script>
+
+<%- include('../partials/footer.ejs') %>

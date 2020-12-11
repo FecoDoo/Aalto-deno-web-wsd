@@ -19,6 +19,11 @@ export {
   lengthBetween,
   maxLength,
   minLength,
+  isNumeric,
+  numberBetween,
+  isInt,
+  isString,
+  match,
 } from "https://deno.land/x/validasaur@v0.15.0/mod.ts";
 export { superoak } from "https://deno.land/x/superoak@2.3.1/mod.ts";
 export { assertEquals } from "https://deno.land/std@0.78.0/testing/asserts.ts";

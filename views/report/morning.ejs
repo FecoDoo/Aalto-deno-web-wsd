@@ -1,0 +1,56 @@
+<%- include('../partials/header.ejs') %>
+<%- include('../partials/navbar.ejs') %>
+<h1>Morning Report</h1>
+<form id="form">
+    <div class="form-group">
+        <label for="sleep_duration">Sleep Duration</label>
+        <input type="number" max=24 min=0 class="form-control" name="sleep_duration" placeholder="24 hours format (rounded up to 2)">
+    </div>
+    <div class="form-group">
+        <label for="sleep_quality">Sleep Quality (1-5)</label>
+        <input type="number" max=5 min=1 class="form-control" name="sleep_quality" placeholder="1 indicates very poor and 5 indicates excellent">
+    </div>
+    <div class="form-group">
+        <label for="mood">Generic Mood (1-5)</label>
+        <input type="number" max=5 min=1 class="form-control" name="mood" placeholder="1 indicates very poor and 5 indicates excellent">
+    </div>
+    <div class="form-group">
+        <label for="date">Choose the date for the report</label>
+        <input type="text" class="form-control" name="date" id="date">
+    </div>
+    <button type="button" id="submit" class="btn btn-primary">Sumit Report</button>
+</form>
+<%- include('../partials/error') %>
+<script>
+    $(document)
+        .ready(function () {
+            var day = new Date();
+            $("#date").datepicker({
+                format: "yyyy-mm-dd",
+            });
+            $("#date").datepicker('setDate',`${day.getFullYear()}-${day.getMonth()+1}-${day.getDate()}`);
+            $('#submit').click(function () {
+                var formData = $("#form").serializeArray()
+                console.log(formData);
+                var data = {
+                    sleep_duration: Number(formData[0].value),
+                    sleep_quality: Number(formData[1].value),
+                    mood: Number(formData[2].value),
+                    date: formData[3].value
+                }
+                $.ajax({
+                    type: 'POST',
+                    url: '/behavior/reporting/morning',
+                    cache: false,
+                    data: JSON.stringify(data),
+                    dataType: "json",
+                    complete: function (response) {
+                        document.getElementById("error").innerHTML = response.responseText
+                    }
+                })
+            }
+            )
+        })
+</script>
+
+<%- include('../partials/footer.ejs') %>

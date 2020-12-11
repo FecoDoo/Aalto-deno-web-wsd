@@ -1,3 +1,8 @@
+const get_user_email = async ({ session }) => {
+  const email = await session.get("user")["email"];
+  return email;
+};
+
 const renderTestPage = async ({ render }) => {
   render("test.ejs");
 };
@@ -7,15 +12,40 @@ const renderMainPage = async ({ render }) => {
 };
 
 const renderLoginPage = async ({ render }) => {
-  render("login.ejs");
+  render("auth/login.ejs");
 };
 
 const renderRegisterationPage = async ({ render }) => {
-  render("register.ejs");
+  render("auth/register.ejs");
 };
 
-const renderDashboardPage = async ({ render }) => {
-  render("dashboard.ejs");
+const renderLogoutPage = async ({ render }) => {
+  render("auth/logout.ejs");
+};
+
+const renderDashboardPage = async ({ render, session }) => {
+  const user = await session.get("user");
+  render("user/dashboard.ejs", { email: user.email });
+};
+
+const renderMorningPage = async ({ render, session }) => {
+  const user = await session.get("user");
+  render("report/morning.ejs", { email: user.email });
+};
+
+const renderEveningPage = async ({ render, session }) => {
+  const user = await session.get("user");
+  render("report/evening.ejs", { email: user.email });
+};
+
+const renderReportPage = async ({ render, session }) => {
+  const user = await session.get("user");
+  render("report/report.ejs", { email: user.email });
+};
+
+const renderSummaryPage = async ({ render, session }) => {
+  const user = await session.get("user");
+  render("summary/summary.ejs", { email: user.email });
 };
 
 export {
@@ -24,4 +54,9 @@ export {
   renderRegisterationPage,
   renderDashboardPage,
   renderTestPage,
+  renderLogoutPage,
+  renderMorningPage,
+  renderEveningPage,
+  renderReportPage,
+  renderSummaryPage,
 };

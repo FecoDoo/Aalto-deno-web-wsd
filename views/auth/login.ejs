@@ -1,5 +1,4 @@
-<%- include('./partials/header.ejs') %>
-
+<%- include('../partials/header.ejs') %>
 <h1>Login Form</h1>
 <form id="form">
     <div class="form-group">
@@ -17,15 +16,16 @@
     <button type="button" id="submit" class="btn btn-primary">Login</button>
     <button type="button" onclick="javascrtpt:window.location.href='/auth/registration'"
         class="btn btn-danger">Register</button>
+        <button type="button" onclick="javascrtpt:window.location.href='/'"
+        class="btn btn-info">Return to main page</button>
 </form>
-<%- include('partials/error') %>
+<%- include('../partials/error') %>
 <script>
     $(document)
         .ready(function () {
-            
+
             $('#submit').click(function () {
                 var formData = $("#form").serializeArray()
-                console.log(formData[0].value);
                 var data = {
                     email: formData[0].value,
                     password: formData[1].value
@@ -36,12 +36,12 @@
                     cache: false,
                     data: JSON.stringify(data),
                     dataType: "json",
-                    complete: function (response, XMLHttpRequest) {
+                    complete: function (response) {
                         console.log(response)
-                        if (response.status !== 200){
+                        if (response.status !== 200) {
                             document.getElementById("error").innerHTML = response.responseText
                         } else {
-                            window.location.href = "/dashboard"
+                            window.location.href = "/user/dashboard"
                         }
                     }
                 })
@@ -50,4 +50,4 @@
         })
 </script>
 
-<%- include('./partials/footer.ejs') %>
+<%- include('../partials/footer.ejs') %>

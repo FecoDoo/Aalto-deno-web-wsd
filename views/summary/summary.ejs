@@ -1,0 +1,91 @@
+<%- include('../partials/header.ejs') %>
+<%- include('../partials/navbar.ejs') %>
+<h1>Summary</h1>
+
+<input type="week" name="week" id="week">
+<input type="month" name="month" id="month">
+<button onclick="getData();">Get Average</button>
+
+<br>
+<div class="alert alert-secondary" role="alert">
+    <h2>Weekly average</h2>
+    <ul id="weekly">
+
+    </ul>
+</div>
+
+<div class="alert alert-primary" role="alert">
+    <h2>Monthly average</span></h2>
+    <ul id="monthly">
+    </ul>
+</div>
+<%- include('../partials/error') %>
+<script>
+    function getData() {
+        $.ajax({
+            type: 'POST',
+            url: '/behavior/summary',
+            data: JSON.stringify({ week: document.getElementById("week").value, month: document.getElementById("month").value }),
+            dataType: "json",
+            complete: function (response) {
+                if (response.status ==200) {
+                    const data = JSON.parse(response.responseText)
+                    document.getElementById("weekly").innerHTML = ""
+                    document.getElementById("monthly").innerHTML = ""
+                    for(var key in data['weekly']){
+                        if (data['weekly'][key] == null){
+                            document.getElementById("weekly").innerHTML = "No data for this week"
+                            break;
+                        }
+                        var li = document.createElement("li");
+                        li.innerHTML = key + ": " + data['weekly'][key]
+                        document.getElementById("weekly").append(li)
+                    }
+                    for(var key in data['monthly']){
+                        if (data['monthly'][key] == null){
+                            document.getElementById("monthly").innerHTML = "No data for this month"
+                            break;
+                        }
+                        var li = document.createElement("li");
+                        li.innerHTML = key + ": " + data['monthly'][key]
+                        document.getElementById("monthly").append(li)
+                    }
+                        
+
+                }
+                
+                // var data = JSON.parse(response.responseText)
+                // document.getElementById("morning_report_status").innerHTML = data.morning
+                // document.getElementById("evening_report_status").innerHTML = data.evening
+            }
+        })
+    };
+
+    //计算本年的周数
+    function getYearWeek(endDate) {
+        //本年的第一天
+        var beginDate = new Date(endDate.getFullYear(), 0, 1);
+        //星期从0-6,0代表星期天，6代表星期六
+        var endWeek = endDate.getDay();
+        if (endWeek == 0) endWeek = 7;
+        var beginWeek = beginDate.getDay();
+        if (beginWeek == 0) beginWeek = 7;
+        //计算两个日期的天数差
+        var millisDiff = endDate.getTime() - beginDate.getTime();
+        var dayDiff = Math.floor((millisDiff + (beginWeek - endWeek) * (24 * 60 * 60 * 1000)) / 86400000);
+        return Math.ceil(dayDiff / 7) + 1;
+    }
+    $(document)
+        .ready(function () {
+            // getData();
+            var day = new Date();
+            var week = getYearWeek(day);
+            var year = day.getFullYear();
+            var month = day.getMonth() + 1;
+            document.getElementById("week").setAttribute('value', `${year}-W${week}`);
+            document.getElementById("month").setAttribute('value', `${year}-${month}`);
+            getData();
+        });
+</script>
+
+<%- include('../partials/footer.ejs') %>

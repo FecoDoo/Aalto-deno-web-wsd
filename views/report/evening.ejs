@@ -1,0 +1,61 @@
+<%- include('../partials/header.ejs') %>
+<%- include('../partials/navbar.ejs', email) %>
+<h1>Evening Report</h1>
+<form id="form">
+    <div class="form-group">
+        <label for="sports">Time spent on exercise and sports</label>
+        <input type="number" max=24 min=0 class="form-control" name="sports" placeholder="24 hours format (rounded up to 2)">
+    </div>
+    <div class="form-group">
+        <label for="study">Time spent on studying</label>
+        <input type="number" max=24 min=0 class="form-control" name="study" placeholder="24 hours format (rounded up to 2)">
+    </div>
+    <div class="form-group">
+        <label for="eating">How is your regularity and quality of eating for the day (1-5)</label>
+        <input type="number" max=5 min=1 class="form-control" name="eating" placeholder="1 indicates very poor and 5 indicates excellent">
+    </div>
+    <div class="form-group">
+        <label for="mood">Generic Mood (1-5)</label>
+        <input type="number" max=5 min=1 class="form-control" name="mood" placeholder="1 indicates very poor and 5 indicates excellent">
+    </div>
+    <div class="form-group">
+        <label for="date">Choose the date for the report</label>
+        <input type="text" class="form-control" name="date" id="date">
+    </div>
+    <button type="button" id="submit" class="btn btn-primary">Sumit Report</button>
+</form>
+<%- include('../partials/error') %>
+<script>
+    $(document)
+        .ready(function () {
+            var day = new Date();
+            $("#date").datepicker({
+                format: "yyyy-mm-dd",
+            });
+            $("#date").datepicker('setDate',`${day.getFullYear()}-${day.getMonth()+1}-${day.getDate()}`);
+            $('#submit').click(function () {
+                var formData = $("#form").serializeArray()
+                console.log(formData)
+                var data = {
+                    sports: Number(formData[0].value),
+                    study: Number(formData[1].value),
+                    eating: Number(formData[2].value),
+                    mood: Number(formData[3].value),
+                    date: formData[4].value
+                }
+                $.ajax({
+                    type: 'POST',
+                    url: '/behavior/reporting/evening',
+                    cache: false,
+                    data: JSON.stringify(data),
+                    dataType: "json",
+                    complete: function (response) {
+                        document.getElementById("error").innerHTML = response.responseText
+                    }
+                })
+            }
+            )
+        })
+</script>
+
+<%- include('../partials/footer.ejs') %>

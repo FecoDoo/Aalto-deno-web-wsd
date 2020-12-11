@@ -1,4 +1,4 @@
-<%- include('./partials/header.ejs') %>
+<%- include('../partials/header.ejs') %>
 <h1>Register Form</h1>
 <form id="form">
     <div class="form-group">
@@ -17,8 +17,10 @@
 
     <button type="button" id="submit" class="btn btn-primary">Register</button>
     <button type="button" onclick="javascrtpt:window.location.href='/auth/login'" class="btn btn-danger">Login</button>
-  </form>
-  <%- include('partials/error') %>
+    <button type="button" onclick="javascrtpt:window.location.href='/'"
+        class="btn btn-info">Return to main page</button>
+</form>
+  <%- include('../partials/error') %>
   <script>
     $(document)
         .ready(function () {
@@ -42,7 +44,7 @@
                         if (response.status !== 200){
                             document.getElementById("error").innerHTML = response.responseText
                         } else {
-                            window.location.href = "/dashboard"
+                            window.location.href = "/user/dashboard"
                         }
                     }
                 })
@@ -50,4 +52,4 @@
             )
         })
 </script>
-<%- include('./partials/footer.ejs') %>
+<%- include('../partials/footer.ejs') %>

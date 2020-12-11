@@ -1,0 +1,9 @@
+<%- include('../partials/header.ejs') %>
+<%- include('../partials/navbar.ejs', {email:email}) %>
+<section>
+<h1>Dashboard</h1>
+<p>Choose option</p>
+<button type="button" class="btn btn-primary btn-lg" onclick="javascrtpt:window.location.href='/behavior/reporting'">Go reporting</button>
+<button type="button" class="btn btn-secondary btn-lg" onclick="javascrtpt:window.location.href='/behavior/summary'">Go summary</button>
+</section>
+<%- include('../partials/footer.ejs') %>

@@ -4,22 +4,24 @@ import { app } from "../app.js";
 Deno.test(
   "POST request to /auth/registration with password less than 4 should return 400",
   async () => {
-    const testClient = await superoak(app);
+    let testClient = await superoak(app);
     await testClient
       .post("/auth/registration")
       .send({ email: "yao.kai@aalto.fi", password: 123 })
-      .expect(400);
+      .expect(400)
+      .end();
   }
 );
 
 Deno.test(
   "POST request to /auth/registration with invalid email should return 400",
   async () => {
-    const testClient = await superoak(app);
+    let testClient = await superoak(app);
     await testClient
       .post("/auth/registration")
       .send({ email: "yao.kai", password: "12345" })
-      .expect(400);
+      .expect(400)
+      .end();
   }
 );
 
