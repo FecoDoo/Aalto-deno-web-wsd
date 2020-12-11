@@ -28,7 +28,12 @@ app.use(middleware.checkLoginStatus);
 // app.use(middleware.checkCount);
 app.use(router.routes());
 
-app.listen({ port: 7777 });
+let port = 7777;
+if (Deno.args.length > 0) {
+  const lastArgument = Deno.args[Deno.args.length - 1];
+  port = Number(lastArgument);
+}
+app.listen({ port: port });
 
 // export default app;
 export { app };
