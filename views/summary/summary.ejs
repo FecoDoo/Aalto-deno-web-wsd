@@ -30,33 +30,30 @@
             complete: function (response) {
                 if (response.status ==200) {
                     const data = JSON.parse(response.responseText)
+                    console.log(data)
                     document.getElementById("weekly").innerHTML = ""
                     document.getElementById("monthly").innerHTML = ""
                     for(var key in data['weekly']){
-                        if (data['weekly'][key] == null){
-                            document.getElementById("weekly").innerHTML = "No data for this week"
-                            break;
-                        }
                         var li = document.createElement("li");
-                        li.innerHTML = key + ": " + data['weekly'][key]
+                        if (data['weekly'][key] == null){
+                            li.innerHTML = key + ": " + "No data for this entry"
+                        } else {
+                            li.innerHTML = key + ": " + data['weekly'][key]
+                        }
                         document.getElementById("weekly").append(li)
                     }
                     for(var key in data['monthly']){
-                        if (data['monthly'][key] == null){
-                            document.getElementById("monthly").innerHTML = "No data for this month"
-                            break;
-                        }
                         var li = document.createElement("li");
-                        li.innerHTML = key + ": " + data['monthly'][key]
+                        if (data['monthly'][key] == null){
+                            li.innerHTML = key + ": " + "No data for this entry"
+                        } else {
+                            li.innerHTML = key + ": " + data['monthly'][key]
+                        }
                         document.getElementById("monthly").append(li)
                     }
                         
 
                 }
-                
-                // var data = JSON.parse(response.responseText)
-                // document.getElementById("morning_report_status").innerHTML = data.morning
-                // document.getElementById("evening_report_status").innerHTML = data.evening
             }
         })
     };
