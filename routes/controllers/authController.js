@@ -89,7 +89,7 @@ const postRegistrationForm = async ({ request, response }) => {
     const user = await commonService.get_user_by_email(email);
 
     if (user.rowCount !== 0) {
-      response.status = 300;
+      response.status = 401;
       response.body = "User already exists";
       return;
     }

@@ -28,7 +28,7 @@ const postMorningReport = async ({ request, response, session }) => {
   const body = request.body({ type: "json" });
   const document = await body.value;
   const [passes, errors] = await validate(document, MorningReportRules);
-
+  console.log(document);
   if (passes) {
     const user = await session.get("user");
     const user_id = user["id"];

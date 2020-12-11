@@ -7,9 +7,9 @@ const errorMiddleware = async (context, next) => {
 };
 
 const checkLoginStatus = async ({ session, request, response }, next) => {
-  console.log(`\nRequest url: ${request.url}`);
-  console.log(`Request method: ${request.method}`);
-  console.log(`Request time: ${Date.now()}`);
+  // console.log(`\nRequest url: ${request.url}`);
+  // console.log(`Request method: ${request.method}`);
+  // console.log(`Request time: ${Date.now()}`);
   if (
     !request.url.pathname.startsWith("/auth") &&
     !request.url.pathname.startsWith("/api") &&
@@ -17,14 +17,14 @@ const checkLoginStatus = async ({ session, request, response }, next) => {
   ) {
     if (session && (await session.get("authenticated"))) {
       const userObj = await session.get("user");
-      console.log(`User id: ${userObj.id}`);
+      // console.log(`User id: ${userObj.id}`);
       await next();
     } else {
       response.status = 401;
       response.redirect("/auth/login");
     }
   } else {
-    console.log("User id: anonymous");
+    // console.log("User id: anonymous");
     await next();
   }
 };

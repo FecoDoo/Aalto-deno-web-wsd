@@ -44,7 +44,7 @@ const by_week = async (week, year, user_id) => {
   let res = {
     average_sleep_duration: 0,
     average_sleep_quality: 0,
-    averege_time_on_sports: 0,
+    average_time_on_sports: 0,
     average_time_on_studing: 0,
     average_mood: 0,
   };
@@ -74,7 +74,7 @@ const by_week = async (week, year, user_id) => {
 
   if (evening.rowCount != 0) {
     const eveningObj = evening.rowsOfObjects()[0];
-    res.averege_time_on_sports = eveningObj["sports"];
+    res.average_time_on_sports = eveningObj["sports"];
     res.average_time_on_studing = eveningObj["study"];
     average_mood = average_mood + Number(eveningObj["mood"]);
   }
@@ -87,7 +87,7 @@ const by_month = async (month, year, user_id) => {
   const res = {
     average_sleep_duration: 0,
     average_sleep_quality: 0,
-    averege_time_on_sports: 0,
+    average_time_on_sports: 0,
     average_time_on_studing: 0,
     average_mood: 0,
   };
@@ -117,7 +117,7 @@ const by_month = async (month, year, user_id) => {
 
   if (evening.rowCount != 0) {
     const eveningObj = evening.rowsOfObjects()[0];
-    res.averege_time_on_sports = eveningObj["sports"];
+    res.average_time_on_sports = eveningObj["sports"];
     res.average_time_on_studing = eveningObj["study"];
     average_mood = average_mood + Number(eveningObj["mood"]);
   }
