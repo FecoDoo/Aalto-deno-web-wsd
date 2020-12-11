@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-web: deno run --allow-net=:${PORT} app.js ${PORT}
-=======
 web: deno run --allow-all --allow-net=:${PORT} app.js ${PORT}
->>>>>>> 5e5b52effaef36f9d3b3856fde23c8f75a61ee05
