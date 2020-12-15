@@ -45,9 +45,15 @@ CREATE TABLE "morning" (
 
 ## Running application
 
+First set env variable `DATABASE_URL` correctly
+```bash
+export DATABASE_URL=postgres://[username]:[password]@localhost:[port]/[database]
+```
+
 Now the application is runable (if env variables are set correctly for the config.database)
 
 The entry point is app.js in the root path, use
+
 
 ```bash
 deno run --allow-all --unstable app.js
